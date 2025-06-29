@@ -16,11 +16,37 @@ llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-001")
 
 # AIMessage: Generated response
 # - Answers | Computations | Structured data | Follow-ups
+
+# This is a conversation without an AIMessage
 messages = [
     SystemMessage(
-        content="You are a helpful assistant. Respond concisely, professionally and technically."
+        content="Your are a travel assistant that books flights, finds hotels, and answers questions"
     ),
-    HumanMessage(content="What is LangChain? What is it useful for?"),
+    HumanMessage(
+        content="I want to go to Paris next weekend. Can you help me book a flight?"
+    ),
+]
+
+# Invode a model with messages
+result = llm.invoke(messages)
+print(f"[AI Message] {result.content}\n")
+
+# A full-blown conversation, this enables contextual awareness
+messages = [
+    SystemMessage(
+        content="Your are a travel assistant that books flights, finds hotels, and answers questions"
+    ),
+    HumanMessage(
+        content="I want to go to Paris next weekend. Can you help me book a flight?"
+    ),
+    AIMessage(
+        content="Sure! Let me check flights from your nearest airport. Where are you flying from?"
+    ),
+    HumanMessage(content="I'm in New York."),
+    AIMessage(
+        content="Here are some options: Delta: Friday 6 PM, $450; Air France: Saturday 9 AM, $500. Would you like to book one of these?"
+    ),
+    HumanMessage(content="The Delta one looks good. Book it."),
 ]
 
 # Invode a model with messages
