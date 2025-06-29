@@ -27,11 +27,12 @@ messages = [
     ),
 ]
 
-# Invode a model with messages
+# Invoke a model with messages
 result = llm.invoke(messages)
 print(f"[AI Message] {result.content}\n")
 
 # A full-blown conversation, this enables contextual awareness
+# Use case involving a travel assistant
 messages = [
     SystemMessage(
         content="Your are a travel assistant that books flights, finds hotels, and answers questions"
@@ -49,6 +50,6 @@ messages = [
     HumanMessage(content="The Delta one looks good. Book it."),
 ]
 
-# Invode a model with messages
+# Invoke a model with messages
 result = llm.invoke(messages)
 print(f"[AI Message] {result.content}")
