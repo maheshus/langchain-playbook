@@ -1,12 +1,11 @@
-# Example Source: https://python.langchain.com/v0.2/docs/integrations/memory/google_firestore/
+# Example Source: https://python.langchain.com/docs/integrations/memory/google_firestore/
 import os
-from dotenv import load_dotenv
 import getpass
+from dotenv import load_dotenv
 from utils.llm_utils import get_model_name
-from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
-from google.cloud import firestore
 from langchain_google_firestore import FirestoreChatMessageHistory
+from google.cloud import firestore
 
 # Load environment variables from .env file
 load_dotenv()
