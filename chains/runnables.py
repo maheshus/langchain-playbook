@@ -30,10 +30,9 @@ extract_content = RunnableLambda(lambda x: x.content)
 # `middle` is a list to allow multiple intermediate steps
 chain = RunnableSequence(first=format_prompt, middle=[call_llm], last=extract_content)
 
-# Instead of writing multiple steps—constructing prompts,
-# invoking the model, parsing the output—every time, a chain lets you bundle them into a single unit
-# You can add logging, memory, agents, tools, or more complex logic without changing your existing structure.
-# Chains make this plug-and-play.
+# Note: LCEL (using `|`) is preferred for simpler chains—more concise and readable.
+# Equivalent chain using LCEL (LangChain Expression Language) is written: chain = format_prompt | call_llm | extract_content
+# RunnableSequence is useful when building dynamically or when explicit control is needed.
 
 # Run chain with a sample query
 result = chain.invoke({"q": "QZSS comparison to other navigation systems like GPS."})
