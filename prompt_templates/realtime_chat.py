@@ -24,9 +24,9 @@ print("Chat with Hubble (type 'exit' to quit)\n")
 issue = input(f"{user}, what issue are you facing?\n")
 
 # First turn using template
-pt = pt.invoke({"issue": issue})
+p = pt.invoke({"issue": issue})
 # Add initial messages to history
-chat_history.extend(pt.to_messages())
+chat_history.extend(p.to_messages())
 response = llm.invoke(chat_history)
 chat_history.append(AIMessage(content=response.content))
 print(f"\n{get_model_name(llm)}: {response.content}\n")
