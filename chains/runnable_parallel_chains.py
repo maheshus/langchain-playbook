@@ -31,7 +31,8 @@ def make_branch(human_prompt: str):
     ])
 
     return (
-        RunnableLambda(lambda feat: pt.format_prompt(features=feat)) # type: ignore
+        # Same effect: RunnableLambda(lambda feat: pt.format_prompt(features=feat)) # type: ignore
+        RunnableLambda(lambda feat: pt.invoke({"features":feat})) # type: ignore
         | llm
         | StrOutputParser()
     )
