@@ -210,3 +210,6 @@ __marimo__/
 **/db/
 **/vectorstore/
 **/chroma_db/
+
+# Ignore .vscode directory
+**/.vscode/
