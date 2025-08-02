@@ -33,8 +33,8 @@ For embedding and storing document vectors, the project uses the Hugging Face mo
 - Suitable for experimentation and learning
 
 To see how this embedding model is used with ChromaDB and LangChain, refer to:
-- `scripts/1a_build_vectorstore.py` – Load and embed documents
-- `scripts/1b_query_vectorstore.py` – Query stored vectors
+- `4_rag/1a_build_vectorstore.py` – Load and embed documents
+- `4_rag/1b_query_vectorstore.py` – Query stored vectors
 
 
 For more information on the Hugging Face embedding model, visit:  
