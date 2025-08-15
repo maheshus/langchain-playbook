@@ -18,8 +18,10 @@ persistent_directory = os.path.join(current_dir, "db", "chroma_db_w_metadata")
 # --- Initialize Hugging Face sentence transformer model ---
 # 'all-MiniLM-L6-v2' generates dense vector representations for input text
 # These embeddings support similarity-based semantic search via vector stores
-logger.info("Initializing Hugging Face embeddings (all-MiniLM-L6-v2)...")
-embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+logger.info(
+    "Initializing Hugging Face embeddings (sentence-transformers/all-mpnet-base-v2)..."
+)
+embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
 logger.info("Embeddings initialized.")
 
 # --- Load existing Chroma vector store with embeddings ---
@@ -29,8 +31,8 @@ db = Chroma(persist_directory=persistent_directory, embedding_function=embedding
 logger.info("Vector store loaded successfully.")
 
 # --- Define user query ---
-query = "Who was the command module pilot for Apollo 11?"
-# query = "Who is Romeo?"
+# query = "Who was the command module pilot for Apollo 11?"
+query = "How did Juliet die?"
 logger.info(f"Query: {query}")
 
 # --- Retrieve relevant documents using similarity score threshold ---

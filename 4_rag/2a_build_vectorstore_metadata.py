@@ -21,6 +21,7 @@ books_dir = os.path.join(current_dir, "books")
 logger.info(f"Books directory: {books_dir}")
 persistent_directory = os.path.join(current_dir, "db", "chroma_db_w_metadata")
 
+
 def extract_gutenberg_metadata(text: str) -> dict:
     """Extracts metadata such as title and author from Project Gutenberg eBook text."""
     metadata = {}
@@ -39,6 +40,7 @@ def extract_gutenberg_metadata(text: str) -> dict:
 
     return metadata
 
+
 # --- Check if vector store already exists ---
 if not os.path.exists(persistent_directory):
     logger.info("Vector store not found. Creating a new one...")
@@ -47,7 +49,7 @@ if not os.path.exists(persistent_directory):
     if not os.path.exists(books_dir):
         logger.error(f"Input folder not found: {books_dir}")
         raise FileNotFoundError(f"Input folder not found: {books_dir}")
-    
+
     # --- List all the books in text format from the books directory ---
     book_files = [file for file in os.listdir(books_dir) if file.endswith(".txt")]
 
@@ -59,7 +61,7 @@ if not os.path.exists(persistent_directory):
         txt_loader = TextLoader(file_path, autodetect_encoding=True)
         raw_docs = txt_loader.load()
 
-         # Use loaded document content for metadata extraction
+        # Use loaded document content for metadata extraction
         gutenberg_header_snippet = raw_docs[0].page_content[:1000] if raw_docs else ""
         book_metadata = extract_gutenberg_metadata(gutenberg_header_snippet)
         book_metadata["source"] = book_file
@@ -78,8 +80,12 @@ if not os.path.exists(persistent_directory):
     # --- Create embeddings using a Hugging Face sentence-transformer model ---
     # This initializes 'all-MiniLM-L6-v2', a lightweight transformer that converts text chunks into fixed-size vectors
     # These embeddings are used for semantic search in LangChain-compatible vector stores (e.g., Chroma, FAISS)
-    logger.info("Initializing Hugging Face embeddings (all-MiniLM-L6-v2)...")
-    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    logger.info(
+        "Initializing Hugging Face embeddings (sentence-transformers/all-mpnet-base-v2)..."
+    )
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-mpnet-base-v2"
+    )
     logger.info("Embeddings initialized.")
 
     # --- Create and persist the vector store ---
