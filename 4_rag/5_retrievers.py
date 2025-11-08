@@ -72,7 +72,7 @@ query_vector_store("chroma_db_with_metadata", query, embeddings, "mmr", {"k": 3,
 # Only documents with a similarity score above 'score_threshold' are returned.  
 # Useful for filtering out weak matches and keeping only highly relevant results.  
 # Ensures quality over quantity in retrieved documents.  
-logger.info("--- Using Similarity Score Threshol ---")
+logger.info("--- Using Similarity Score Threshold ---")
 query_vector_store("chroma_db_with_metadata", query, embeddings, "similarity_score_threshold", {"k": 3, "score_threshold":0.3})
 
 logger.info("Querying demonstrations with different search types completed.")
