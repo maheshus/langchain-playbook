@@ -26,16 +26,27 @@ For usage examples, refer to the scripts under `1_chat_models/` in this reposito
 
 ## Vector Embeddings via Hugging Face
 
-For embedding and storing document vectors, the project uses the Hugging Face model: `all-MiniLM-L6-v2`.
+This project supports two Hugging Face sentence-transformer models for embedding and storing document vectors.
 
-- Free to use locally
-- Provides a good trade-off between performance and accuracy
-- Suitable for experimentation and learning
+### `all-MiniLM-L6-v2`
+- Free and lightweight — ideal for experimentation and learning  
+- Provides a strong balance between speed and accuracy  
+- Recommended for small- to medium-scale use  
 
-To see how this embedding model is used with ChromaDB and LangChain, refer to:
-- `4_rag/1a_build_vectorstore.py` – Load and embed documents
-- `4_rag/1b_query_vectorstore.py` – Query stored vectors
+### `sentence-transformers/all-mpnet-base-v2`
+- More advanced model with higher semantic precision and contextual understanding  
+- Slightly slower but better suited for production or complex retrieval tasks  
 
+### Why the switch?
+The project originally used **MiniLM-L6-v2** for its speed and simplicity.  
+It later adopted **MPNet-base-v2** to improve retrieval accuracy and handle more complex semantic queries.
 
-For more information on the Hugging Face embedding model, visit:  
-[https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)
+### References
+See examples in:
+- `4_rag/1a_build_vectorstore.py` – Load and embed documents  
+- `4_rag/1b_query_vectorstore.py` – Query stored vectors  
+
+Further reading:
+- [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)  
+- [all-mpnet-base-v2](https://huggingface.co/sentence-transformers/all-mpnet-base-v2)
+
