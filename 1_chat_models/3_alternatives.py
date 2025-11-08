@@ -1,6 +1,5 @@
 # https://python.langchain.com/docs/integrations/chat/
 from dotenv import load_dotenv
-from utils.llm_utils import get_model_name
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -37,7 +36,7 @@ messages = [
 
 # Invoke models with messages
 result = llm_deepseek.invoke(messages)
-print(f"[AI Message][{get_model_name(llm_deepseek)}] {result.content}")
+print(f"deepseek-chat-v3-0324: {result.content}")
 
 result = llm_gemini.invoke(messages)
-print(f"[AI Message][{get_model_name(llm_gemini)}] {result.content}")
+print(f"gemini-2.0-flash-001: {result.content}")

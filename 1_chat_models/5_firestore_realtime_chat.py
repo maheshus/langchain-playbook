@@ -2,7 +2,6 @@
 import os
 import getpass
 from dotenv import load_dotenv
-from utils.llm_utils import get_model_name
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_google_firestore import FirestoreChatMessageHistory
 from google.cloud import firestore
@@ -50,4 +49,4 @@ while True:
     result = llm.invoke(chat_history.messages)
     chat_history.add_ai_message(result.content)  # type: ignore
 
-    print(f"{get_model_name(llm)}: {result.content}\n")
+    print(f"gemini-2.0-flash-001: {result.content}\n")

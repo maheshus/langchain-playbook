@@ -1,6 +1,5 @@
 from dotenv import load_dotenv
 import getpass
-from utils.llm_utils import get_model_name
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 
@@ -39,7 +38,7 @@ while True:
     # Add AIMessage to chat history
     chat_history.append(AIMessage(content=response.content))
 
-    print(f"{get_model_name(llm)}: {response.content}")
+    print(f"gemini-2.0-flash-001: {response.content}")
 
 # Diplay chat history on exit
 print("---- Message History ----")
