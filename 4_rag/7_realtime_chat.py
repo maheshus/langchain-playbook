@@ -29,25 +29,27 @@ load_dotenv()
 # region Model Selection
 def select_llm():
     """Prompt user to select between Gemini and OpenRouter models."""
-    print(f"{user}, please select a model:")
-    print("1. Google Gemini (gemini-2.0-flash-001)")
-    print("2. OpenRouter (mistralai/mistral-nemo:free)")
+    print(f"\n{user}, please select a model:")
+    print("1. Google Gemini (gemini-2.0-flash)")
+    print("2. Google Gemini (gemini-2.0-flash-lite)")
+    print("3. OpenRouter (mistralai/mistral-nemo:free)")
 
-    choice = input("Enter your choice (1 or 2): ").strip()
-
+    choice = input("Enter your choice (1, 2 or 3): ").strip()
     match choice:
         case "1":
-            print("✓ Using Google Gemini model.")
-            return ChatGoogleGenerativeAI(model="gemini-2.0-flash-001")
+            print("✓ Using Google gemini-2.0-flash.\n")
+            return ChatGoogleGenerativeAI(model="gemini-2.0-flash")
         case "2":
-            print("✓ Using OpenRouter model (Mistral).")
+            print("✓ Using Google gemini-2.0-flash-lite.\n")
+            return ChatGoogleGenerativeAI(model="gemini-2.0-flash-lite")
+        case "3":
+            print("✓ Using OpenRouter mistralai/mistral-nemo.\n")
             return ChatOpenAI(model="mistralai/mistral-nemo:free")
         case _:
-            print("Invalid choice, defaulting to Gemini.")
-            return ChatGoogleGenerativeAI(model="gemini-2.0-flash-001")
+            print("Invalid choice, defaulting to Google gemini-2.0-flash-lite.")
+            return ChatGoogleGenerativeAI(model="gemini-2.0-flash-lite")
 
-
-# -Initialize selected LLM-
+# Initialize selected LLM
 llm = select_llm()
 #endregion
 
