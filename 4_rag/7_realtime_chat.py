@@ -9,12 +9,11 @@ from dotenv import load_dotenv
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_chroma import Chroma
-from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_openai import ChatOpenAI
 from langchain_huggingface import HuggingFaceEmbeddings
-
+from langchain_openai import ChatOpenAI
 
 # Configure logging, to include a timestamp — you need to specify %(asctime)s in the format string when configuring logging
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] [%(name)s] %(message)s")
@@ -25,6 +24,7 @@ user = getpass.getuser()
 
 # Load environment variables from .env file
 load_dotenv()
+
 
 # region Model Selection
 def select_llm():
@@ -49,9 +49,10 @@ def select_llm():
             print("Invalid choice, defaulting to Google gemini-2.0-flash-lite.")
             return ChatGoogleGenerativeAI(model="gemini-2.0-flash-lite")
 
+
 # Initialize selected LLM
 llm = select_llm()
-#endregion
+# endregion
 
 # region Vector Store Creation
 # Define paths
@@ -59,15 +60,22 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 persistent_directory = os.path.join(current_dir, "db", "chroma_db_w_metadata")
 
 # Initialize Hugging Face sentence transformer model
-logger.info("Initializing Hugging Face embeddings (sentence-transformers/all-mpnet-base-v2)...")
+logger.info(
+    "Initializing Hugging Face embeddings (sentence-transformers/all-mpnet-base-v2)..."
+)
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
 logger.info("Embeddings initialized.")
 
 # Load existing Chroma vector store with embeddings
 if os.path.exists(persistent_directory):
     logger.info(f"Loading vector store from: {persistent_directory}")
-    db = Chroma(persist_directory=persistent_directory, embedding_function=embeddings)
-    logger.info("Vector store loaded successfully.")
+else:
+    raise FileNotFoundError(
+        f"The directory '{persistent_directory}' does not exist. Please check the path."
+    )
+
+db = Chroma(persist_directory=persistent_directory, embedding_function=embeddings)
+logger.info("Vector store loaded successfully.")
 
 # search_type="similarity_score_threshold" performs a semantic similarity search
 # and filters out documents that fall below the specified similarity score
@@ -79,8 +87,6 @@ retriever = db.as_retriever(
     search_type="similarity_score_threshold",
     search_kwargs={"score_threshold": 0.4, "k": 5},
 )
-
-
 # endregion
 
 # region History-Aware Retriever
@@ -117,12 +123,14 @@ standalone_qn_pt = ChatPromptTemplate.from_messages(
 # It ensures that follow-up questions are contextualized into complete, standalone queries,
 # improving the accuracy of RAG results.
 
-history_aware_retriever = create_history_aware_retriever(llm, retriever, standalone_qn_pt)
+history_aware_retriever = create_history_aware_retriever(
+    llm, retriever, standalone_qn_pt
+)
 # endregion
 
 # region Question Answering Prompt
-# This system prompt guides the LLM to generate accurate, well-grounded answers 
-# strictly using the retrieved context. If the information is missing or uncertain, 
+# This system prompt guides the LLM to generate accurate, well-grounded answers
+# strictly using the retrieved context. If the information is missing or uncertain,
 # the model should clearly state that it doesn't know — avoiding guesses or assumptions.
 # Responses should be clear, factual, and limited to three concise sentences.
 qa_sys_pt = """You are an expert assistant answering questions based solely on the retrieved context below.
@@ -142,29 +150,31 @@ Context:
 # Build a prompt template for answering user questions
 # Combines the system instructions, chat history, and current user input
 # to generate grounded, context-aware responses.
-qa_pt = ChatPromptTemplate.from_messages([
-    ("system", qa_sys_pt),
-    MessagesPlaceholder("chat_history"),
-    ("human", "{input}"),
+qa_pt = ChatPromptTemplate.from_messages(
+    [
+        ("system", qa_sys_pt),
+        MessagesPlaceholder("chat_history"),
+        ("human", "{input}"),
     ]
 )
 # endregion
 
 # region Retrieval-Augmented Generation Pipeline
 # Build a chain for question answering using retrieved documents.
-# `create_stuff_documents_chain` builds a chain that sends all retrieved documents 
-# (the "stuffed" context) directly into the LLM prompt at once.  
-# It’s useful for smaller sets of documents where the entire context can fit within 
+# `create_stuff_documents_chain` builds a chain that sends all retrieved documents
+# (the "stuffed" context) directly into the LLM prompt at once.
+# It’s useful for smaller sets of documents where the entire context can fit within
 # the model’s token limit, enabling the LLM to generate an informed and coherent answer.
 qa_chain = create_stuff_documents_chain(llm, qa_pt)
 
 # Combine the history-aware retriever with the QA chain.
 # `create_retrieval_chain` links a retriever with a question-answering (QA) chain.
-# It first retrieves relevant documents using the retriever, 
+# It first retrieves relevant documents using the retriever,
 # then passes them to the QA chain, which generates an answer based on that context.
 # This creates a complete Retrieval-Augmented Generation (RAG) pipeline in a single step.
 rag_chain = create_retrieval_chain(history_aware_retriever, qa_chain)
-#endregion
+# endregion
+
 
 # Function to simulate an ongoing interactive chat session with the AI
 def run_chat_session():
@@ -180,15 +190,16 @@ def run_chat_session():
 
         try:
             # Send query to the RAG chain
-            result = rag_chain.invoke({"input": user_input, "chat_history": chat_history})
+            result = rag_chain.invoke(
+                {"input": user_input, "chat_history": chat_history}
+            )
             ai_answer = result.get("answer", "No response generated!")
             print(f"AI: {ai_answer}")
 
             # Update chat history
-            chat_history.extend([
-                HumanMessage(content=user_input),
-                AIMessage(content=ai_answer)
-            ])
+            chat_history.extend(
+                [HumanMessage(content=user_input), AIMessage(content=ai_answer)]
+            )
 
             # Delay to prevent hitting rate limits
             time.sleep(3)
