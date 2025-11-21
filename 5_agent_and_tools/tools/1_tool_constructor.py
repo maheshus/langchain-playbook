@@ -137,12 +137,11 @@ tools = [
 ]
 
 # Retrieve the ReAct prompt template (Reason–Action pattern) from the LangChain Hub.
-# https://smith.langchain.com/hub/hwchase17/react
 logger.info("Fetch the openai-tools-agent prompt template from the LangChain Hub...")
 prompt = hub.pull("hwchase17/openai-tools-agent")
 
 # Create an agent that uses ReAct prompting
-logger.info("Set up the tool caling agent.")
+logger.info("Set up the tool calling agent.")
 agent = create_tool_calling_agent(llm=llm, tools=tools, prompt=prompt)
 
 # Build the agent executor by combining the agent logic and available tools.
